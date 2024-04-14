@@ -3,7 +3,7 @@
     "version": "1.0.1",
     "main": "src/mod.js",
     "license": "MIT",
-    "author": "Dirtbikercj",
+    "author": "Dirtbikercj, Brin",
     "akiVersion": "3.8.x",
 	"loadBefore": [],
 	"loadAfter": [],
