@@ -6,7 +6,7 @@ import { DatabaseServer } from "@spt-aki/servers/DatabaseServer";
 import { IDatabaseTables } from "@spt-aki/models/spt/server/IDatabaseTables";
 import { LogTextColor } from "@spt-aki/models/spt/logging/LogTextColor";
 
-class RemoveTimeGateFromQuests implements IPostDBLoadMod
+class FasterPlanting implements IPostDBLoadMod
 {
     private logger: ILogger;
 
@@ -28,16 +28,21 @@ class RemoveTimeGateFromQuests implements IPostDBLoadMod
 
         for (const quest in quests) 
         {
-            const conditionsAOS = quests[quest].conditions.AvailableForStart;
+            const conditionsPT = quests[quest].conditions.AvailableForFinish;
 
-            if (conditionsAOS !== undefined) 
+            if (conditionsPT !== undefined) 
             {
-                for (const condition in conditionsAOS)
+                for (const condition in conditionsPT)
                 {
-                    if (conditionsAOS[condition]?.conditionType === "Quest" && conditionsAOS[condition]?.availableAfter > 0)
+                    if (conditionsPT[condition]?.conditionType === "LeaveItemAtLocation" && conditionsPT[condition]?.plantTime > 0)
                     {
-                        conditionsAOS[condition].availableAfter = 0;
-                        this.logger.logWithColor(`${quests[quest].QuestName} Time requirement removed.`, LogTextColor.GREEN);
+                        conditionsPT[condition].plantTime = 1;
+                        this.logger.logWithColor(`${quests[quest].QuestName} Hide item time reduced.`, LogTextColor.MAGENTA);
+                    },
+					if (conditionsPT[condition]?.conditionType === "PlaceBeacon" && conditionsPT[condition]?.plantTime > 0)
+                    {
+                        conditionsPT[condition].plantTime = 1;
+                        this.logger.logWithColor(`${quests[quest].QuestName} Plant beacon time reduced.`, LogTextColor.MAGENTA);
                     }
                 }
             }
@@ -45,4 +50,4 @@ class RemoveTimeGateFromQuests implements IPostDBLoadMod
     }
 }
 
-module.exports = { mod: new RemoveTimeGateFromQuests() }
+module.exports = { mod: new FasterPlanting() }
